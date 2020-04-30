@@ -19,7 +19,7 @@ app.use('/', function (req, res, next) {
 
 app.get('/', function (req, res) {
     res.setHeader('Content-Type', 'text/plain');
-    res.send("OK");
+    res.send("OK. Version: 1.0.0");
 });
 
 // Add status endpoint
