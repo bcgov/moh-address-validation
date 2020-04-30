@@ -2,7 +2,7 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "mygovbc-msp-service",
+    "name": "address-validator",
     "annotations": {
       "description": "Contains build objects",
       "iconClass": "icon-github"
@@ -114,21 +114,21 @@
       "displayName": "Application Name",
       "description": "The name given to the application",
       "required": true,
-      "value": "mygovbc-msp-service"
+      "value": "address-validator"
     },
     {
       "name": "GIT_SOURCE_URL",
       "displayName": "Source Repository",
       "description": "The source repository to use for the builds.",
       "required": true,
-      "value": "https://github.com/bcgov/MyGovBC-MSP-Service.git"
+      "value": "https://github.com/bcgov/moh-address-validation.git"
     },
     {
       "name": "GIT_REFERENCE",
       "displayName": "Git Reference",
       "description": "Optional branch, tag, or commit.",
       "required": true,
-      "value": "master"
+      "value": "dev"
     }
   ]
 }
