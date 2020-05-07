@@ -192,6 +192,7 @@ function formatAddressData(data) {
     result.Province = getTextData(data, 'Province');
     result.Country = getTextData(data, 'Country');
     result.Residue = getTextData(data, 'Residue');
+    result.DeliveryAddressLines = getTextData(data, 'DeliveryAddressLines');
     result.AddressComplete = data.AddressComplete._text;
     return result;
 }
