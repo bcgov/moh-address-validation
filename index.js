@@ -106,7 +106,7 @@ app.get('/address', function (req, res) {
                 }
             }
             else
-                reply.Address.push(dataSet.Address);
+                reply.Address.push(formatAddressData(dataSet.Address));
 
             res.send(reply);
         })
