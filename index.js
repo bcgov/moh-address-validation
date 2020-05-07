@@ -179,7 +179,7 @@ function getIp() {
 }
 
 function formatAddressData(data) {
-    let result;
+    let result = {};
     result.Organization = getTextData(data, 'Organization');
     result.Contact = getTextData(data, 'Contact');
     result.Building = getTextData(data, 'Building');
