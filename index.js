@@ -5,6 +5,7 @@ const express = require('express');
 const xmlConvert = require('xml-js');
 const soap = require('easy-soap-request');
 const soapRequest = require('./soapRequest.js');
+var packageJSON = require('./package.json');
 
 const clientCert = base64Decode(process.env.MUTUAL_TLS_PEM_CERT);
 const clientKey = base64Decode(process.env.MUTUAL_TLS_PEM_KEY_BASE64);
@@ -19,7 +20,7 @@ app.use('/', function (req, res, next) {
 
 app.get('/', function (req, res) {
     res.setHeader('Content-Type', 'text/plain');
-    res.send("OK. Version: 1.0.0");
+    res.send("OK. Version: " + packageJSON.version);
 });
 
 // Add status endpoint
