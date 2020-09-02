@@ -56,7 +56,10 @@ app.get('/address', function (req, res) {
     const address = req.query.address;
     const url = soapRequest.address.url;
     const myheaders = soapRequest.address.headers;
-    const xml = soapRequest.address.request.replace("{address}", address).replace("{country}", "Canada");
+    const xml = soapRequest.address.request
+                    .replace("{address}", address)
+                    .replace("{country}", "Canada")
+                    .replace("{province}", "BC");
 
     const agent = new https.Agent({
         rejectUnauthorized: false,
