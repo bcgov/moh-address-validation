@@ -36,10 +36,7 @@ const addressValidationRequest = {
                <v4:Country>
                   <v4:string>{country}</v4:string>
 							 </v4:Country>
-							 <v4:Province>
-                  <v4:string>{province}</v4:string>
-               </v4:Province>
-               <v4:AddressComplete>{address}</v4:AddressComplete>
+							 <v4:AddressComplete>{address}</v4:AddressComplete>
             </v4:Address>
          </v4:addresses>
       </v4:Process>
