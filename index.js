@@ -53,7 +53,7 @@ app.get('/test', function (req, res) {
 
 app.get('/address', function (req, res) {
 
-    const address = req.query.address;
+    const address = req.query.address + ' BC';
     const url = soapRequest.address.url;
     const myheaders = soapRequest.address.headers;
     const xml = soapRequest.address.request
