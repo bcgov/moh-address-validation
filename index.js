@@ -1,3 +1,5 @@
+const winston = require('winston');
+require('winston-daily-rotate-file');
 const fs = require('fs');
 const https = require('https');
 const axios = require('axios');
@@ -9,6 +11,48 @@ var packageJSON = require('./package.json');
 
 const clientCert = base64Decode(process.env.MUTUAL_TLS_PEM_CERT);
 const clientKey = base64Decode(process.env.MUTUAL_TLS_PEM_KEY_BASE64);
+
+const FILE_LOG_LEVEL = process.env.FILE_LOG_LEVEL || 'info';
+const HOST_NAME = process.env.HOSTNAME || '?';
+const MAX_FILES = parseInt(process.env.MAX_FILES, 10) || 10;
+const MAX_BYTE_SIZE_PER_FILE = parseInt(process.env.MAX_BYTE_SIZE_PER_FILE, 10) || (1024 * 1024 * 75)
+const LOG_DIR_NAME = process.env.LOG_DIR_NAME || '';
+const APPEND_POD_NAME_TO_FILE = (process.env.APPEND_POD_NAME_TO_FILE == 'true');
+const FILE_LOG_NAME = LOG_DIR_NAME ?
+    LOG_DIR_NAME + '/address-validator' + (APPEND_POD_NAME_TO_FILE ? '-' + HOST_NAME : '') + '.log'
+    : './logs/address-validator' + (APPEND_POD_NAME_TO_FILE ? '-' + HOST_NAME : '') + '.log';
+
+var transport = null;
+var winstonLogger = null;
+
+// Daily rotate file transport for logs
+transport = new winston.transports.DailyRotateFile({
+    filename: FILE_LOG_NAME,
+    datePattern: 'YYYY-MM-DD',
+    prepend: true,
+    level: FILE_LOG_LEVEL,
+    timestamp: true,
+    maxsize: MAX_BYTE_SIZE_PER_FILE,
+    maxFiles: MAX_FILES,
+});
+
+// Winston Logger init
+winstonLogger = winston.createLogger({
+    level: FILE_LOG_LEVEL,
+    transports: [
+        new winston.transports.Console({timestamp: true}),
+        transport
+    ]
+});
+
+winstonLogger.error = function (err, context) {
+    winstonLogger.error('Address-Validator error:' + err + ' context:' + context);
+};
+
+// remove console if not in debug mode
+if (FILE_LOG_LEVEL != 'debug') {
+    winston.remove(winston.transports.Console);
+}
 
 // using Express
 const app = express();
@@ -115,7 +159,9 @@ app.get('/address', function (req, res) {
         })
         .catch(err => {
             const error = { "error": err.message || err };
-            res.send(error); console.log(error);
+            winstonLogger.error(err.message);
+            res.send(error);
+            console.log(error);
         });
 });
 
