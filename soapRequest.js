@@ -21,7 +21,7 @@ const zipCodeRequest = {
 };
 
 const addressValidationRequest = {
-	url: 'https://addrvaltst.hlth.gov.bc.ca/AddrValidation/AddressValidation',
+	url: process.env.ADDRESS_VALIDATOR_URL,
 	request: `<soapenv:Envelope 
 	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
 	xmlns:v4="http://validator5.AddressDoctor.com/Webservice5/v4">

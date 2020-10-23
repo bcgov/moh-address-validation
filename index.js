@@ -14,6 +14,7 @@ const clientKey = base64Decode(process.env.MUTUAL_TLS_PEM_KEY_BASE64);
 
 const FILE_LOG_LEVEL = process.env.FILE_LOG_LEVEL || 'info';
 const HOST_NAME = process.env.HOSTNAME || '?';
+const USE_AUDIT_LOGS = (process.env.USE_AUDIT_LOGS == 'true');
 const MAX_FILES = parseInt(process.env.MAX_FILES, 10) || 10;
 const MAX_BYTE_SIZE_PER_FILE = parseInt(process.env.MAX_BYTE_SIZE_PER_FILE, 10) || (1024 * 1024 * 75)
 const LOG_DIR_NAME = process.env.LOG_DIR_NAME || '';
@@ -25,34 +26,37 @@ const FILE_LOG_NAME = LOG_DIR_NAME ?
 var transport = null;
 var winstonLogger = null;
 
-// Daily rotate file transport for logs
-transport = new winston.transports.DailyRotateFile({
-    filename: FILE_LOG_NAME,
-    datePattern: 'YYYY-MM-DD',
-    prepend: true,
-    level: FILE_LOG_LEVEL,
-    timestamp: true,
-    maxsize: MAX_BYTE_SIZE_PER_FILE,
-    maxFiles: MAX_FILES,
-});
+if (USE_AUDIT_LOGS) {
+    // Daily rotate file transport for logs
+    transport = new winston.transports.DailyRotateFile({
+        filename: FILE_LOG_NAME,
+        datePattern: 'YYYY-MM-DD',
+        prepend: true,
+        level: FILE_LOG_LEVEL,
+        timestamp: true,
+        maxsize: MAX_BYTE_SIZE_PER_FILE,
+        maxFiles: MAX_FILES,
+    });
 
-// Winston Logger init
-winstonLogger = winston.createLogger({
-    level: FILE_LOG_LEVEL,
-    transports: [
-        new winston.transports.Console({timestamp: true}),
-        transport
-    ]
-});
+    // Winston Logger init
+    winstonLogger = winston.createLogger({
+        level: FILE_LOG_LEVEL,
+        transports: [
+            new winston.transports.Console({timestamp: true}),
+            transport
+        ]
+    });
 
-winstonLogger.error = function (err, context) {
-    winstonLogger.error('Address-Validator error:' + err + ' context:' + context);
-};
+    winstonLogger.error = function (err, context) {
+        winstonLogger.error('Address-Validator error:' + err + ' context:' + context);
+    };
 
-// remove console if not in debug mode
-if (FILE_LOG_LEVEL != 'debug') {
-    winston.remove(winston.transports.Console);
+    // remove console if not in debug mode
+    if (FILE_LOG_LEVEL != 'debug') {
+        winston.remove(winston.transports.Console);
+    }
 }
+
 
 // using Express
 const app = express();
