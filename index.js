@@ -227,7 +227,7 @@ function base64Decode(string) {
 }
 
 function getIp() {
-    const url = "https://api6.ipify.org?format=json";
+    const url = "https://api.ipify.org?format=json";
     return axios.get(url);
 }
 
