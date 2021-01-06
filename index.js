@@ -6,6 +6,9 @@ const axios = require('axios');
 const express = require('express');
 const xmlConvert = require('xml-js');
 const soap = require('easy-soap-request');
+const ip = require('ip');
+const publicIp = require('public-ip');
+
 const soapRequest = require('./soapRequest.js');
 var packageJSON = require('./package.json');
 
@@ -83,11 +86,21 @@ app.get('/status', function (req, res) {
 });
 
 app.get('/ip', function (req, res) {
-
     res.setHeader('Content-Type', 'text/plain');
-    getIp()
-        .then(rep => res.send(rep.data))
-        .catch(err => res.send(err.message));
+    const ipv4 = ip.address();
+    console.log('Internal IPv4: ' + ipv4);
+    res.send(ipv4);
+});
+
+app.get('/public-ip', function (req, res) {
+    res.setHeader('Content-Type', 'text/plain');
+    publicIp.v4().then(function(ipv4) {
+        console.log('External IPv4: ' + ipv4);
+        res.send(ipv4);
+    }).catch(function(error) {
+        console.log('ERROR: ', error);
+        res.send(error);
+    });
 });
 
 app.get('/test', function (req, res) {
