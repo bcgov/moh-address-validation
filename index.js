@@ -96,7 +96,7 @@ app.get('/public-ip', function (req, res) {
     res.setHeader('Content-Type', 'text/plain');
     publicIp.v4().then(function(ipv4) {
         console.log('External IPv4: ' + ipv4);
-        res.send(ipv4);
+        res.status(200).send(ipv4);
     }).catch(function(error) {
         console.log('ERROR: ', error);
         res.send(error);
